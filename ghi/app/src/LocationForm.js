@@ -75,18 +75,8 @@ class LocationForm extends React.Component {
         if (response.ok) {
             const data = await response.json();
             this.setState({ states: data.states });
-
-
-            //         const selectTag = document.getElementById('state');
-            //         for (let state of data.states) {
-            //             const option = document.createElement('option');
-            //             option.value = state.abbreviation;
-            //             option.innerHTML = state.name;
-            //             selectTag.appendChild(option);
         }
     }
-
-
 
     render() {
         return (
