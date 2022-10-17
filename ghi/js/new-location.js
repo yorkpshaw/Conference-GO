@@ -8,21 +8,15 @@ window.addEventListener('DOMContentLoaded', async () => {
         const data = await response.json();
 
         const selectTag = document.getElementById('state');
-        for (let state of data.states) {
-            // Create an 'option' element
-            let option = document.createElement('option')
-            // Set the '.value' property of the option element to the
-            // state's abbreviation
-            option.value = state.abbreviation
-            // Set the '.innerHTML' property of the option element to
-            // the state's name
-            option.innerHTML = state.name
-            // Append the option element as a child of the select tag
+        console.log('data', data)
 
+        for (let state of data.states) {
+            let option = document.createElement('option')
+            option.value = state.abbreviation
+            option.innerHTML = state.name
             selectTag.appendChild(option)
         }
     }
-
 
     const formTag = document.getElementById('create-location-form');
     formTag.addEventListener('submit', async (event) => {
@@ -44,4 +38,5 @@ window.addEventListener('DOMContentLoaded', async () => {
             const newLocation = await response.json();
         }
     });
+
 });
