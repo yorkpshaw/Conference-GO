@@ -11,24 +11,34 @@ class ConferenceForm extends React.Component {
             max_presentations: '',
             max_attendees: '',
             location: '',
-            locations: []
+            locations: [],
         };
-        this.handleNameChange = this.handleNameChange.bind(this);
-        this.handleStartsChange = this.handleStartsChange.bind(this);
-        this.handleEndsChange = this.handleEndsChange.bind(this);
-        this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
-        this.handleMaxPresentationsChange = this.handleMaxPresentationsChange.bind(this);
-        this.handleMaxAttendeesChange = this.handleMaxAttendeesChange.bind(this);
-        this.handleLocationsChange = this.handleLocationsChange.bind(this);
+
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChangeDescription = this.handleChangeDescription.bind(this);
+        this.handleChangeEnds = this.handleChangeEnds.bind(this);
+        this.handleChangeLocation = this.handleChangeLocation.bind(this);
+        this.handleChangeMaxAttendees = this.handleChangeMaxAttendees.bind(this);
+        this.handleChangeMaxPresentations = this.handleChangeMaxPresentations.bind(this);
+        this.handleChangeName = this.handleChangeName.bind(this);
+        this.handleChangeStarts = this.handleChangeStarts.bind(this);
+    }
+
+    async componentDidMount() {
+        const url = 'http://localhost:8000/api/locations/';
+
+        const response = await fetch(url);
+
+        if (response.ok) {
+            const data = await response.json();
+            this.setState({ locations: data.locations });
+        }
     }
 
     async handleSubmit(event) {
         event.preventDefault();
         const data = { ...this.state };
-        delete data.locations
-        // data.room_count = data.roomCount;
-        // delete data.roomCount;
+        delete data.locations;
 
         const locationUrl = 'http://localhost:8000/api/conferences/';
         const fetchConfig = {
@@ -40,60 +50,53 @@ class ConferenceForm extends React.Component {
         };
         const response = await fetch(locationUrl, fetchConfig);
         if (response.ok) {
-            const newLocation = await response.json();
-
-            const cleared = {
+            const newConference = await response.json();
+            console.log(newConference);
+            this.setState({
                 name: '',
                 starts: '',
                 ends: '',
                 description: '',
                 max_presentations: '',
                 max_attendees: '',
-                locations: '',
-            };
-            this.setState(cleared);
+                location: '',
+            });
         }
     }
 
-    handleNameChange(event) {
+    handleChangeName(event) {
         const value = event.target.value;
-        this.setState({ name: value })
-    };
-    handleStartsChange(event) {
-        const value = event.target.value;
-        this.setState({ starts: value })
-    };
-    handleEndsChange(event) {
-        const value = event.target.value;
-        this.setState({ ends: value })
-    };
-    handleDescriptionChange(event) {
-        const value = event.target.value;
-        this.setState({ description: value })
-    };
-    handleMaxPresentationsChange(event) {
-        const value = event.target.value;
-        this.setState({ max_presentations: value })
-    };
-    handleMaxAttendeesChange(event) {
-        const value = event.target.value;
-        this.setState({ max_attendees: value })
-    };
-    handleLocationsChange(event) {
-        const value = event.target.value;
-        this.setState({ location: value })
-    };
+        this.setState({ name: value });
+    }
 
-    async componentDidMount() {
-        const url = 'http://localhost:8000/api/locations/';
+    handleChangeStarts(event) {
+        const value = event.target.value;
+        this.setState({ starts: value });
+    }
 
-        const response = await fetch(url);
+    handleChangeEnds(event) {
+        const value = event.target.value;
+        this.setState({ ends: value });
+    }
 
-        if (response.ok) {
-            const data = await response.json();
-            this.setState({ locations: data.locations });
-            console.log(this.state.locations)
-        }
+    handleChangeDescription(event) {
+        const value = event.target.value;
+        this.setState({ description: value });
+    }
+
+    handleChangeMaxPresentations(event) {
+        const value = event.target.value;
+        this.setState({ max_presentations: value });
+    }
+
+    handleChangeMaxAttendees(event) {
+        const value = event.target.value;
+        this.setState({ max_attendees: value });
+    }
+
+    handleChangeLocation(event) {
+        const value = event.target.value;
+        this.setState({ location: value });
     }
 
     render() {
@@ -104,48 +107,46 @@ class ConferenceForm extends React.Component {
                         <h1>Create a new conference</h1>
                         <form onSubmit={this.handleSubmit} id="create-conference-form">
                             <div className="form-floating mb-3">
-                                <input onChange={this.handleNameChange} value={this.state.name} placeholder="Name" required type="text" name="name" id="name" className="form-control" />
+                                <input onChange={this.handleChangeName} placeholder="Name" required type="text" name="name" id="name" className="form-control" />
                                 <label htmlFor="name">Name</label>
                             </div>
                             <div className="form-floating mb-3">
-                                <input onChange={this.handleStartsChange} value={this.state.starts} placeholder="Start date" name="starts" type="date" id="starts" className="form-control" />
-                                <label htmlFor="starts">Start date</label>
+                                <input onChange={this.handleChangeStarts} placeholder="Starts" required type="date" name="starts" id="starts" className="form-control" />
+                                <label htmlFor="starts">Starts</label>
                             </div>
                             <div className="form-floating mb-3">
-                                <input onChange={this.handleEndsChange} value={this.state.ends} placeholder="End date" name="ends" type="date" id="ends" className="form-control" />
-                                <label htmlFor="ends">End date</label>
+                                <input onChange={this.handleChangeEnds} placeholder="Ends" required type="date" name="ends" id="ends" className="form-control" />
+                                <label htmlFor="ends">Ends</label>
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="description" className="form-label"></label>
-                                <textarea onChange={this.handleDescriptionChange} className="form-control" placeholder="Description" id="description" rows="3"></textarea>
+                                <label htmlFor="description">Description</label>
+                                <textarea onChange={this.handleChangeDescription} className="form-control" id="description" rows="3" name="description"></textarea>
                             </div>
                             <div className="form-floating mb-3">
-                                <input onChange={this.handleMaxPresentationsChange} value={this.state.max_presentations} placeholder="Maximum presentations" name="max_presentations" required type="number" id="max_presentations" className="form-control" />
-                                <label htmlFor="room_count">Maximum presentations</label>
+                                <input onChange={this.handleChangeMaxPresentations} placeholder="Maximum presentations" required type="number" name="max_presentations" id="max_presentations" className="form-control" />
+                                <label htmlFor="max_presentations">Maximum presentations</label>
                             </div>
                             <div className="form-floating mb-3">
-                                <input onChange={this.handleMaxAttendeesChange} value={this.state.max_attendees} placeholder="Maximum attendees" name="max_attendees" required type="number" id="max_attendees" className="form-control" />
-                                <label htmlFor="room_count">Maximum attendees</label>
+                                <input onChange={this.handleChangeMaxAttendees} placeholder="Maximum attendees" required type="number" name="max_attendees" id="max_attendees" className="form-control" />
+                                <label htmlFor="max_attendees">Maximum attendees</label>
                             </div>
                             <div className="mb-3">
-                                <select required onChange={this.handleLocationsChange} id="location" name="location" className="form-select">
+                                <select onChange={this.handleChangeLocation} required name="location" id="location" className="form-select">
                                     <option value="">Choose a location</option>
                                     {this.state.locations.map(location => {
                                         return (
-                                            <option key={location.id} value={location.name}>
-                                                {location.name}
-                                            </option>
-                                        );
+                                            <option key={location.id} value={location.id}>{location.name}</option>
+                                        )
                                     })}
                                 </select>
                             </div>
                             <button className="btn btn-primary">Create</button>
                         </form>
                     </div>
-                </div >
-            </div >
-
+                </div>
+            </div>
         );
     }
 }
+
 export default ConferenceForm;

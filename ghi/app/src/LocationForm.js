@@ -9,10 +9,9 @@ class LocationForm extends React.Component {
             city: '',
             states: []
         };
-        this.state = { states: [] };
         this.handleNameChange = this.handleNameChange.bind(this);
-        this.handleRoomCountChange = this.handleRoomCountChange.bind(this);
         this.handleCityChange = this.handleCityChange.bind(this);
+        this.handleRoomCountChange = this.handleRoomCountChange.bind(this);
         this.handleStateChange = this.handleStateChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -23,7 +22,6 @@ class LocationForm extends React.Component {
         data.room_count = data.roomCount;
         delete data.roomCount;
         delete data.states;
-        console.log(data);
 
         const locationUrl = 'http://localhost:8000/api/locations/';
         const fetchConfig = {
@@ -51,21 +49,22 @@ class LocationForm extends React.Component {
     handleNameChange(event) {
         const value = event.target.value;
         this.setState({ name: value })
-    };
+    }
+
     handleRoomCountChange(event) {
         const value = event.target.value;
         this.setState({ roomCount: value })
-    };
+    }
+
     handleCityChange(event) {
         const value = event.target.value;
         this.setState({ city: value })
-    };
+    }
+
     handleStateChange(event) {
         const value = event.target.value;
-        this.setState({ state: value })
-    };
-
-
+        this.setState({ state: value });
+    }
 
     async componentDidMount() {
         const url = 'http://localhost:8000/api/states/';
@@ -86,20 +85,19 @@ class LocationForm extends React.Component {
                         <h1>Create a new location</h1>
                         <form onSubmit={this.handleSubmit} id="create-location-form">
                             <div className="form-floating mb-3">
-                                <input onChange={this.handleNameChange} value={this.state.name}
-                                    placeholder="Name" required type="text" name="{name}" id="name" className="form-control" />
+                                <input value={this.state.name} onChange={this.handleNameChange} placeholder="Name" required type="text" name="name" id="name" className="form-control" />
                                 <label htmlFor="name">Name</label>
                             </div>
                             <div className="form-floating mb-3">
-                                <input onChange={this.handleRoomCountChange} value={this.state.roomCount} placeholder="Room count" required type="number" name="room_count" id="room_count" className="form-control" />
+                                <input value={this.state.roomCount} onChange={this.handleRoomCountChange} placeholder="Room count" required type="number" name="room_count" id="room_count" className="form-control" />
                                 <label htmlFor="room_count">Room count</label>
                             </div>
                             <div className="form-floating mb-3">
-                                <input onChange={this.handleCityChange} value={this.state.city} placeholder="City" required type="text" name="city" id="city" className="form-control" />
+                                <input value={this.state.city} onChange={this.handleCityChange} placeholder="City" required type="text" name="city" id="city" className="form-control" />
                                 <label htmlFor="city">City</label>
                             </div>
                             <div className="mb-3">
-                                <select required onChange={this.handleStateChange} value={this.state.state} name="state" id="state" className="form-select">
+                                <select value={this.state.state} onChange={this.handleStateChange} required name="state" id="state" className="form-select">
                                     <option value="">Choose a state</option>
                                     {this.state.states.map(state => {
                                         return (
@@ -118,6 +116,5 @@ class LocationForm extends React.Component {
         );
     }
 }
-
 
 export default LocationForm;
