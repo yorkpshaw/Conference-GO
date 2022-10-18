@@ -26,8 +26,9 @@ class ConferenceForm extends React.Component {
     async handleSubmit(event) {
         event.preventDefault();
         const data = { ...this.state };
-        data.room_count = data.roomCount;
-        delete data.roomCount;
+        delete data.locations
+        // data.room_count = data.roomCount;
+        // delete data.roomCount;
 
         const locationUrl = 'http://localhost:8000/api/conferences/';
         const fetchConfig = {
