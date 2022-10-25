@@ -4,12 +4,11 @@ class PresentationForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
-            email: '',
+            presenter_name: '',
+            presenter_email: '',
             company_name: '',
             title: '',
             synopsis: '',
-            conference: '',
             conferences: [],
         };
 
@@ -36,10 +35,11 @@ class PresentationForm extends React.Component {
     async handleSubmit(event) {
         event.preventDefault();
         const data = { ...this.state };
+        console.log(data)
+        const stringId = data.conference.split('/')
+        let conferenceId = stringId[3]
         delete data.conferences;
-
-        let conferenceHref = this.state.conference
-        const presentationURL = `http://localhost:8000/api/conferences/${conferenceHref}/presentations`;
+        const presentationUrl = `http://localhost:8000/api/conferences/${conferenceId}/presentations/`;
         const fetchConfig = {
             method: "post",
             body: JSON.stringify(data),
@@ -47,27 +47,29 @@ class PresentationForm extends React.Component {
                 'Content-Type': 'application/json',
             },
         };
-        const response = await fetch(presentationURL, fetchConfig);
+
+        const response = await fetch(presentationUrl, fetchConfig);
         if (response.ok) {
             const newPresentation = await response.json();
-            this.setState({
-                name: '',
-                email: '',
+            const cleared = {
+                presenter_name: '',
+                presenter_email: '',
                 company_name: '',
                 title: '',
                 synopsis: '',
                 conference: '',
-            });
+            };
+            this.setState(cleared);
         }
     }
 
     handleChangeName(event) {
         const value = event.target.value;
-        this.setState({ name: value });
+        this.setState({ presenter_name: value });
     }
     handleChangeEmail(event) {
         const value = event.target.value;
-        this.setState({ email: value });
+        this.setState({ presenter_email: value });
     }
     handleChangeCompanyName(event) {
         const value = event.target.value;
@@ -94,24 +96,24 @@ class PresentationForm extends React.Component {
                         <h1>Create a new presentation</h1>
                         <form onSubmit={this.handleSubmit} id="create-presentation-form">
                             <div className="form-floating mb-3">
-                                <input onChange={this.handleChangeName} placeholder="Presenter name" required type="text" name="presenter_name" id="presenter_name" className="form-control" />
+                                <input value={this.state.presenter_name} onChange={this.handleChangeName} placeholder="Presenter name" required type="text" name="presenter_name" id="presenter_name" className="form-control" />
                                 <label htmlFor="presenter_name">Presenter name</label>
                             </div>
                             <div className="form-floating mb-3">
-                                <input onChange={this.handleChangeEmail} placeholder="Presenter email" required type="email" name="presenter_email" id="presenter_email" className="form-control" />
+                                <input value={this.state.presenter_email} onChange={this.handleChangeEmail} placeholder="Presenter email" required type="email" name="presenter_email" id="presenter_email" className="form-control" />
                                 <label htmlFor="presenter_email">Presenter email</label>
                             </div>
                             <div className="form-floating mb-3">
-                                <input onChange={this.handleChangeCompanyName} placeholder="Company name" type="text" name="company_name" id="company_name" className="form-control" />
+                                <input value={this.state.company_name} onChange={this.handleChangeCompanyName} placeholder="Company name" type="text" name="company_name" id="company_name" className="form-control" />
                                 <label htmlFor="company_name">Company name</label>
                             </div>
                             <div className="form-floating mb-3">
-                                <input onChange={this.handleChangeTitle} placeholder="Title" required type="text" name="title" id="title" className="form-control" />
+                                <input value={this.state.title} onChange={this.handleChangeTitle} placeholder="Title" required type="text" name="title" id="title" className="form-control" />
                                 <label htmlFor="title">Title</label>
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="synopsis">Synopsis</label>
-                                <textarea onChange={this.handleChangeSynopsis} className="form-control" id="synopsis" rows="3" name="synopsis"></textarea>
+                                <textarea value={this.state.synopsis} onChange={this.handleChangeSynopsis} className="form-control" id="synopsis" rows="3" name="synopsis"></textarea>
                             </div>
                             <div className="mb-3">
                                 <select onChange={this.handleChangeConference} required name="conference" id="conference" className="form-select">
